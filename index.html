@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>你已经爱上别人了吗？</title>
+  <style>
+    body {
+      background-color: pink;
+      font-family: "微软雅黑", sans-serif;
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: background 1s;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .btn {
+      background-color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 25px;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #ffd1dc;
+      transform: scale(1.1);
+    }
+
+    #noBtn {
+      position: absolute;
+    }
+
+    /* Perfect Heart ❤️ */
+    .heart-container {
+      position: relative;
+      width: 150px;
+      height: 130px;
+      background-color: red;
+      clip-path: path("M75 130 L0 60 A37 37 0 0 1 75 25 A37 37 0 0 1 150 60 Z");
+      animation: beat 1.5s infinite;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.2) rotate(0deg); }
+    }
+
+    /* Lightning Crack ⚡ */
+    .crack {
+      position: absolute;
+      width: 4px;
+      height: 130px;
+      background: linear-gradient(white, yellow, white);
+      top: 0;
+      left: 73px;
+      opacity: 0;
+      z-index: 2;
+      box-shadow: 0 0 15px white;
+      transform: skewX(-10deg);
+    }
+
+    .crack.show {
+      animation: crackAnim 1s forwards;
+    }
+
+    @keyframes crackAnim {
+      0% { opacity: 0; transform: scaleY(0.1) skewX(-10deg); filter: brightness(2); }
+      30% { opacity: 1; filter: brightness(5); }
+      60% { opacity: 1; filter: brightness(8); }
+      100% { opacity: 0; transform: scaleY(1.2) skewX(-10deg); }
+    }
+
+    /* Heart halves 💔 */
+    .broken-left, .broken-right {
+      position: absolute;
+      width: 75px;
+      height: 130px;
+      top: 0;
+      background-color: red;
+      opacity: 0;
+    }
+
+    .broken-left {
+      clip-path: path("M75 130 L0 60 A37 37 0 0 1 75 25 Z");
+      left: 0;
+    }
+
+    .broken-right {
+      clip-path: path("M0 25 A37 37 0 0 1 75 60 L0 130 Z");
+      left: 75px;
+    }
+
+    /* Breaking animation */
+    .broken-left.animate {
+      animation: leftBreak 1.5s forwards;
+      opacity: 1;
+    }
+
+    .broken-right.animate {
+      animation: rightBreak 1.5s forwards;
+      opacity: 1;
+    }
+
+    @keyframes leftBreak {
+      0% { transform: translate(0,0) rotate(0); opacity: 1; }
+      100% { transform: translate(-70px,30px) rotate(-25deg); opacity: 0; }
+    }
+
+    @keyframes rightBreak {
+      0% { transform: translate(0,0) rotate(0); opacity: 1; }
+      100% { transform: translate(70px,30px) rotate(25deg); opacity: 0; }
+    }
+
+    /* Final text fade */
+    .fade-in {
+      animation: fadeIn 2s forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; text-shadow: none; }
+      to { opacity: 1; text-shadow: 0 0 15px white; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="page1">
+    <h1>你已经爱上别人了吗？(._.)</h1>
+    <button id="yesBtn" class="btn">是</button>
+    <button id="noBtn" class="btn">没</button>
+  </div>
+
+  <div id="page2" style="display:none;">
+    <div class="heart-container" id="heart"></div>
+    <div class="crack" id="crack"></div>
+    <div class="broken-left" id="leftHalf"></div>
+    <div class="broken-right" id="rightHalf"></div>
+  </div>
+
+  <div id="page3" style="display:none;">
+    <h1 id="finalText">我就知道。</h1>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const page3 = document.getElementById('page3');
+    const heart = document.getElementById('heart');
+    const crack = document.getElementById('crack');
+    const leftHalf = document.getElementById('leftHalf');
+    const rightHalf = document.getElementById('rightHalf');
+    const finalText = document.getElementById('finalText');
+
+    // Move “没” button
+    function moveButton(button) {
+      const x = Math.random() * (window.innerWidth - button.offsetWidth);
+      const y = Math.random() * (window.innerHeight - button.offsetHeight);
+      button.style.left = x + 'px';
+      button.style.top = y + 'px';
+    }
+
+    noBtn.addEventListener('mouseover', () => moveButton(noBtn));
+    noBtn.addEventListener('click', () => moveButton(noBtn));
+
+    // When click “是”
+    yesBtn.addEventListener('click', () => {
+      page1.style.display = 'none';
+      page2.style.display = 'flex';
+      document.body.style.background = "#ff4d6d";
+
+      // Step 1: Lightning crack
+      setTimeout(() => {
+        crack.classList.add('show');
+      }, 800);
+
+      // Step 2: Split heart
+      setTimeout(() => {
+        heart.style.display = 'none';
+        leftHalf.classList.add('animate');
+        rightHalf.classList.add('animate');
+      }, 1800);
+
+      // Step 3: Final message
+      setTimeout(() => {
+        page2.style.display = 'none';
+        page3.style.display = 'flex';
+        finalText.classList.add('fade-in');
+        document.body.style.background = "pink";
+      }, 3600);
+    });
+  </script>
+
+</body>
+</html>
